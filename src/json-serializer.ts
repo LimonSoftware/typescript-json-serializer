@@ -25,6 +25,7 @@ interface Dictionary<T = any> {
 
 export class JsonSerializer {
     public options = new JsonSerializerOptions();
+    public additionalProperties: Array<string>;
 
     constructor(options?: Partial<JsonSerializerOptions>) {
         this.options = { ...this.options, ...options };
@@ -119,22 +120,22 @@ export class JsonSerializer {
             }
         });
 
+        this.additionalProperties = difference(Object.keys(obj), jsonPropertiesMetadataKeys);
+
         if (this.options.additionalPropertiesPolicy === 'remove') {
             return instance;
         }
 
-        const additionalProperties = difference(Object.keys(obj), jsonPropertiesMetadataKeys);
-
-        if (!additionalProperties.length) {
+        if (!this.additionalProperties.length) {
             return instance;
         }
 
         if (this.options.additionalPropertiesPolicy === 'disallow') {
             this.error(
-                `Additional properties detected in ${JSON.stringify(obj)}: ${additionalProperties}.`
+                `Additional properties detected in ${JSON.stringify(obj)}: ${this.additionalProperties}.`
             );
         } else if (this.options.additionalPropertiesPolicy === 'allow') {
-            additionalProperties.forEach(key => (instance[key] = obj[key]));
+            this.additionalProperties.forEach(key => (instance[key] = obj[key]));
         }
 
         return instance;
