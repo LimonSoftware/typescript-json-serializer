@@ -1,3 +1,10 @@
+<a name="6.0.2"></a>
+# 6.0.2 (2024-02-20)
+
+### CHANGES
+
+Add support to access additionalProperties in the serializer.
+
 <a name="6.0.1"></a>
 # 6.0.1 (2023-06-07)
 
